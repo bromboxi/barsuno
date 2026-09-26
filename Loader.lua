@@ -4,7 +4,7 @@
 -- ✅ Don't Use It Feature + Tab
 -- ==================================================
 
-local BASE_URL = "https://raw.githubusercontent.com/barsuno/barsuno/main/"
+local BASE_URL = "https://raw.githubusercontent.com/bromboxi/barsuno/main/"
 
 _G.YOKUDO_EnablePrint = false
 
