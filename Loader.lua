@@ -191,7 +191,7 @@ Loading.Update(39)
 --loadstring(GetScript("Features/TeleportSystem.lua"))()
 
 Loading.Update(42)
-loadstring(GetScript("Features/AutoFarm.lua"))()
+--loadstring(GetScript("Features/AutoFarm.lua"))()
 
 Loading.Update(45)
 loadstring(GetScript("Features/AutoAttack.lua"))()
@@ -207,7 +207,7 @@ Loading.Update(51)
 --loadstring(GetScript("Features/AttackDrone.lua"))()
 
 Loading.Update(54)
-loadstring(GetScript("Features/ManagerDrone.lua"))()
+--loadstring(GetScript("Features/ManagerDrone.lua"))()
 
 Loading.Update(57)
 loadstring(GetScript("Features/ManualFastClick.lua"))()
