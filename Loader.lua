@@ -1,7 +1,7 @@
 -- ==================================================
 -- YOKUDO HUB | STEAL AN EGG | Loader (UPDATED)
 -- ✅ VIPTP ជំនួស EggCheckPremium
--- ✅ Don't Use It Feature + Tab local BASE_URL = "https://raw.githubusercontent.com/bromboxi/barsuno/main/"
+-- ✅ Collect Egg new Feature + Tab
 -- ==================================================
 
 local BASE_URL = "https://raw.githubusercontent.com/bromboxi/barsuno/main/"
@@ -212,16 +212,20 @@ loadstring(GetScript("Features/ManagerDrone.lua"))()
 Loading.Update(57)
 loadstring(GetScript("Features/ManualFastClick.lua"))()
 
--- ✅ Don't Use It Feature
+-- ✅ DropEgg Feature (ថ្មី)
 Loading.Update(58)
-loadstring(GetScript("Features/DontUseIt.lua"))()
+loadstring(GetScript("Features/DropEgg.lua"))()
+
+-- ✅ AntiGuard Feature (ថ្មី)
+Loading.Update(59)
+loadstring(GetScript("Features/AntiGuard.lua"))()
 
 -- ✅ FarmingManager
-Loading.Update(59)
+Loading.Update(60)
 loadstring(GetScript("Features/FarmingManager.lua"))()
 
 -- ✅ ConfigSystem
-Loading.Update(60)
+Loading.Update(61)
 loadstring(GetScript("Features/ConfigSystem.lua"))()
 
 -- ==================================================
@@ -248,9 +252,9 @@ loadstring(GetScript("Tabs/HopServer.lua"))()
 Loading.Update(90)
 loadstring(GetScript("Tabs/Setting.lua"))()
 
--- ✅ Don't Use It Tab
+-- ✅ Collect Egg new Tab (ជំនួស Don't Use It)
 Loading.Update(91)
-loadstring(GetScript("Tabs/DontUseIt.lua"))()
+loadstring(GetScript("Tabs/CollectEggNew.lua"))()
 
 -- ==================================================
 -- SELECT DEFAULT TAB
