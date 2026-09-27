@@ -1,7 +1,6 @@
 -- ==================================================
--- YOKUDO HUB | FEATURE | Anti Trap (REVONE)
--- ✅ Remove ALL Children in workspace.Transient
--- ✅ Remove Children in workspace.__DEBRIS (Backup)
+-- YOKUDO HUB | FEATURE | Anti Trap
+-- ✅ Remove ONLY "PlayerTrap" Prefix in workspace.Transient
 -- ✅ Loop រាល់ 0.5s
 -- ==================================================
 
@@ -9,49 +8,28 @@ local AntiTrapEnabled = false
 local RemoveThread = nil
 
 -- ==================================================
--- REMOVE TRANSIENT CHILDREN
+-- PREFIX FILTER
 -- ==================================================
-local function RemoveTransientChildren()
+local TRAP_PREFIX = "PlayerTrap"
+
+-- ==================================================
+-- REMOVE ONLY TRAP CHILDREN
+-- ==================================================
+local function RemoveTrapChildren()
     local Transient = workspace:FindFirstChild("Transient")
     if not Transient then return 0 end
 
     local Count = 0
     for _, child in ipairs(Transient:GetChildren()) do
-        pcall(function()
-            child:Destroy()
-            Count = Count + 1
-        end)
+        if child.Name:sub(1, #TRAP_PREFIX) == TRAP_PREFIX then
+            pcall(function()
+                child:Destroy()
+                Count = Count + 1
+            end)
+        end
     end
 
     return Count
-end
-
--- ==================================================
--- REMOVE DEBRIS CHILDREN (BACKUP)
--- ==================================================
-local function RemoveDebrisChildren()
-    local Debris = workspace:FindFirstChild("__DEBRIS")
-    if not Debris then return 0 end
-
-    local Count = 0
-    for _, child in ipairs(Debris:GetChildren()) do
-        pcall(function()
-            child:Destroy()
-            Count = Count + 1
-        end)
-    end
-
-    return Count
-end
-
--- ==================================================
--- REMOVE ALL (TRANSIENT + DEBRIS)
--- ==================================================
-local function RemoveAll()
-    local TransientCount = RemoveTransientChildren()
-    local DebrisCount = RemoveDebrisChildren()
-
-    return TransientCount, DebrisCount
 end
 
 -- ==================================================
@@ -62,7 +40,7 @@ local function EnableAntiTrap()
     AntiTrapEnabled = true
 
     -- ✅ លុបភ្លាមម្តង
-    RemoveAll()
+    RemoveTrapChildren()
 
     -- ✅ Loop រាល់ 0.5s
     if RemoveThread then
@@ -74,9 +52,9 @@ local function EnableAntiTrap()
         while AntiTrapEnabled do
             task.wait(0.5)
             if AntiTrapEnabled then
-                local T, D = RemoveAll()
-                if T > 0 or D > 0 then
-                    print("[AntiTrap] Removed Transient:", T, "| Debris:", D)
+                local T = RemoveTrapChildren()
+                if T > 0 then
+                    print("[AntiTrap] Removed", T, "PlayerTrap(s)")
                 end
             end
         end
@@ -119,9 +97,8 @@ _G.YOKUDO_AntiTrap = {
     Enable = EnableAntiTrap,
     Disable = DisableAntiTrap,
     IsEnabled = function() return AntiTrapEnabled end,
-    RemoveAll = RemoveAll,
-    RemoveTransientChildren = RemoveTransientChildren,
-    RemoveDebrisChildren = RemoveDebrisChildren,
+    RemoveTrapChildren = RemoveTrapChildren,
+    TRAP_PREFIX = TRAP_PREFIX,
 }
 
-print("✅ AntiTrap Feature Loaded (REVONE)")
+print("✅ AntiTrap Feature Loaded (PlayerTrap Only)")
