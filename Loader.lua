@@ -241,7 +241,7 @@ Loading.Update(70)
 loadstring(GetScript("Tabs/Combat.lua"))()
 
 Loading.Update(75)
---loadstring(GetScript("Tabs/AutoFarming.lua"))()
+loadstring(GetScript("Tabs/AutoFarming.lua"))()
 
 Loading.Update(80)
 loadstring(GetScript("Tabs/Event.lua"))()
