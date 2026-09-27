@@ -188,7 +188,7 @@ Loading.Update(36)
 loadstring(GetScript("Features/GodMode.lua"))()
 
 Loading.Update(39)
-loadstring(GetScript("Features/TeleportSystem.lua"))()
+--loadstring(GetScript("Features/TeleportSystem.lua"))()
 
 Loading.Update(42)
 loadstring(GetScript("Features/AutoFarm.lua"))()
@@ -201,10 +201,10 @@ loadstring(GetScript("Features/AFKSystem.lua"))()
 
 -- ✅ VIPTP (AFK Farm Only)
 Loading.Update(50)
-loadstring(GetScript("Features/VIPTP.lua"))()
+--loadstring(GetScript("Features/VIPTP.lua"))()
 
 Loading.Update(51)
-loadstring(GetScript("Features/AttackDrone.lua"))()
+--loadstring(GetScript("Features/AttackDrone.lua"))()
 
 Loading.Update(54)
 loadstring(GetScript("Features/ManagerDrone.lua"))()
