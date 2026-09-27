@@ -222,7 +222,7 @@ loadstring(GetScript("Features/AntiGuard.lua"))()
 
 -- ✅ FarmingManager
 Loading.Update(60)
-loadstring(GetScript("Features/FarmingManager.lua"))()
+--loadstring(GetScript("Features/FarmingManager.lua"))()
 
 -- ✅ ConfigSystem
 Loading.Update(61)
