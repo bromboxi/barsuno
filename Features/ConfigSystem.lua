@@ -1,9 +1,9 @@
 --==================================================
--- YOKUDO HUB - CONFIG SYSTEM
--- Save/Load: SelectedMethod + TeleportSpeed
+-- YOKUDO HUB - CONFIG SYSTEM (EMPTY)
+-- ✅ ដក AttackDroneEnabled + SafeSpeedMode ចេញទាំងស្រុង
+-- ✅ គ្មាន Save/Load អ្វីទេ
 -- Folder: YOKUDO-SAE
 -- File: yokudo.json
--- ✅ ដក AttackDroneEnabled ចេញ
 --==================================================
 
 local HttpService = game:GetService("HttpService")
@@ -12,18 +12,13 @@ local CONFIG_FOLDER = "YOKUDO-SAE"
 local CONFIG_FILE = CONFIG_FOLDER .. "/yokudo.json"
 
 --==================================================
--- DEFAULT CONFIG
+-- DEFAULT CONFIG (ទទេ)
 --==================================================
-
-local DefaultConfig = {
-    SelectedMethod = "TeleportFly",
-    TeleportSpeed = 300
-}
+local DefaultConfig = {}
 
 --==================================================
 -- FILE HELPERS
 --==================================================
-
 local function EnsureFolder()
     pcall(function()
         if not isfolder(CONFIG_FOLDER) then
@@ -41,63 +36,21 @@ local function FileExists(Path)
 end
 
 --==================================================
--- LOAD CONFIG
+-- LOAD CONFIG (ទទេ)
 --==================================================
-
 local function LoadConfig()
     EnsureFolder()
-
-    local Config = table.clone(DefaultConfig)
-
-    if not FileExists(CONFIG_FILE) then
-        print("[YOKUDO] Config not found. Using default.")
-        return Config
-    end
-
-    local Success, RawData = pcall(function()
-        return readfile(CONFIG_FILE)
-    end)
-
-    if not Success or not RawData or RawData == "" then
-        print("[YOKUDO] Failed to read config. Using default.")
-        return Config
-    end
-
-    local DecodeSuccess, DecodedData = pcall(function()
-        return HttpService:JSONDecode(RawData)
-    end)
-
-    if not DecodeSuccess or type(DecodedData) ~= "table" then
-        print("[YOKUDO] Failed to decode config. Using default.")
-        return Config
-    end
-
-    if type(DecodedData.SelectedMethod) == "string" then
-        if DecodedData.SelectedMethod == "TeleportFly" or DecodedData.SelectedMethod == "InstantTeleport" then
-            Config.SelectedMethod = DecodedData.SelectedMethod
-        end
-    end
-
-    if type(DecodedData.TeleportSpeed) == "number" then
-        Config.TeleportSpeed = math.clamp(DecodedData.TeleportSpeed, 50, 1100)
-    end
-
-    print("[YOKUDO] Config Loaded | Method: " .. Config.SelectedMethod .. " | Speed: " .. tostring(Config.TeleportSpeed))
-
-    return Config
+    print("[YOKUDO] Config Loaded (Empty)")
+    return {}
 end
 
 --==================================================
--- SAVE CONFIG
+-- SAVE CONFIG (ទទេ)
 --==================================================
-
 local function SaveConfig(Config)
     EnsureFolder()
 
-    local DataToSave = {
-        SelectedMethod = Config.SelectedMethod or DefaultConfig.SelectedMethod,
-        TeleportSpeed = Config.TeleportSpeed or DefaultConfig.TeleportSpeed
-    }
+    local DataToSave = {}
 
     local EncodeSuccess, EncodedData = pcall(function()
         return HttpService:JSONEncode(DataToSave)
@@ -113,7 +66,7 @@ local function SaveConfig(Config)
     end)
 
     if WriteSuccess then
-        print("[YOKUDO] Config Saved | Method: " .. DataToSave.SelectedMethod .. " | Speed: " .. tostring(DataToSave.TeleportSpeed))
+        print("[YOKUDO] Config Saved (Empty)")
         return true
     else
         warn("[YOKUDO] Failed to write config")
@@ -122,25 +75,21 @@ local function SaveConfig(Config)
 end
 
 --==================================================
--- APPLY CONFIG (TO _G)
+-- APPLY CONFIG (ទទេ)
 --==================================================
-
 local function ApplyConfig(Config)
-    _G.YOKUDO_SelectedMethod = Config.SelectedMethod
-    _G.YOKUDO_TeleportSpeed = Config.TeleportSpeed
+    -- គ្មាន Apply អ្វីទេ
 end
 
 --==================================================
 -- INITIAL LOAD
 --==================================================
-
 local LoadedConfig = LoadConfig()
 ApplyConfig(LoadedConfig)
 
 --==================================================
 -- EXPORT
 --==================================================
-
 _G.YOKUDO_ConfigSystem = {
     Folder = CONFIG_FOLDER,
     File = CONFIG_FILE,
@@ -153,28 +102,30 @@ _G.YOKUDO_ConfigSystem = {
         task.spawn(function()
             task.wait(0.5)
 
+            -- ✅ Update Event Tab UI
+            pcall(function()
+                if _G.YOKUDO_RefreshEventUI then
+                    _G.YOKUDO_RefreshEventUI()
+                end
+            end)
+
             -- ✅ Update Setting Tab UI
-            if _G.YOKUDO_RefreshSettingUI then
-                _G.YOKUDO_RefreshSettingUI()
-            end
+            pcall(function()
+                if _G.YOKUDO_RefreshSettingUI then
+                    _G.YOKUDO_RefreshSettingUI()
+                end
+            end)
         end)
 
         return Config
     end,
 
     Save = function()
-        local Config = {
-            SelectedMethod = _G.YOKUDO_SelectedMethod or DefaultConfig.SelectedMethod,
-            TeleportSpeed = _G.YOKUDO_TeleportSpeed or DefaultConfig.TeleportSpeed
-        }
-        return SaveConfig(Config)
+        return SaveConfig({})
     end,
 
     Get = function()
-        return {
-            SelectedMethod = _G.YOKUDO_SelectedMethod or DefaultConfig.SelectedMethod,
-            TeleportSpeed = _G.YOKUDO_TeleportSpeed or DefaultConfig.TeleportSpeed
-        }
+        return {}
     end,
 
     Reset = function()
@@ -183,4 +134,4 @@ _G.YOKUDO_ConfigSystem = {
     end
 }
 
-print("✅ ConfigSystem Loaded (Method + Speed Only)")
+print("✅ ConfigSystem Loaded (Empty — No AttackDrone/SafeSpeedMode)")
