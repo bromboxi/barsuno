@@ -256,6 +256,10 @@ loadstring(GetScript("Tabs/Setting.lua"))()
 Loading.Update(91)
 loadstring(GetScript("Tabs/CollectEggNew.lua"))()
 
+-- ✅ ESP Tab (Name + Distance + Box)
+Loading.Update(90)
+--loadstring(GetScript("Tabs/ESP.lua"))()
+
 -- ==================================================
 -- SELECT DEFAULT TAB
 -- ==================================================
