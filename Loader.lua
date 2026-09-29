@@ -225,7 +225,7 @@ Loading.Update(56)
 loadstring(GetScript("Features/AutoEventNew.lua"))()
 
 Loading.Update(58)
-loadstring(GetScript("Features/ManagerDrone.lua"))()
+--loadstring(GetScript("Features/ManagerDrone.lua"))()
 
 Loading.Update(60)
 loadstring(GetScript("Features/ManualFastClick.lua"))()
