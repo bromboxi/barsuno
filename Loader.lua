@@ -188,10 +188,10 @@ Loading.Update(36)
 loadstring(GetScript("Features/GodMode.lua"))()
 
 Loading.Update(39)
---loadstring(GetScript("Features/TeleportSystem.lua"))()
+loadstring(GetScript("Features/TeleportSystem.lua"))()
 
 Loading.Update(42)
---loadstring(GetScript("Features/AutoFarm.lua"))()
+loadstring(GetScript("Features/AutoFarm.lua"))()
 
 Loading.Update(45)
 loadstring(GetScript("Features/AutoAttack.lua"))()
@@ -222,11 +222,11 @@ loadstring(GetScript("Features/AntiGuard.lua"))()
 
 -- ✅ FarmingManager
 Loading.Update(60)
---loadstring(GetScript("Features/FarmingManager.lua"))()
+loadstring(GetScript("Features/FarmingManager.lua"))()
 
 -- ✅ ConfigSystem
 Loading.Update(61)
-loadstring(GetScript("Features/ConfigSystem.lua"))()
+--loadstring(GetScript("Features/ConfigSystem.lua"))()
 
 -- ==================================================
 -- LOAD TABS
@@ -258,7 +258,7 @@ loadstring(GetScript("Tabs/CollectEggNew.lua"))()
 
 -- ✅ ESP Tab (Name + Distance + Box)
 Loading.Update(90)
---loadstring(GetScript("Tabs/ESP.lua"))()
+loadstring(GetScript("Tabs/ESP.lua"))()
 
 -- ==================================================
 -- SELECT DEFAULT TAB
