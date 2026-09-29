@@ -199,10 +199,6 @@ loadstring(GetScript("Features/AutoAttack.lua"))()
 Loading.Update(48)
 loadstring(GetScript("Features/AFKSystem.lua"))()
 
--- ✅ VIPTP (AFK Farm Only)
-Loading.Update(50)
---loadstring(GetScript("Features/VIPTP.lua"))()
-
 Loading.Update(51)
 --loadstring(GetScript("Features/AttackDrone.lua"))()
 
@@ -226,7 +222,7 @@ loadstring(GetScript("Features/FarmingManager.lua"))()
 
 -- ✅ ConfigSystem
 Loading.Update(61)
---loadstring(GetScript("Features/ConfigSystem.lua"))()
+loadstring(GetScript("Features/ConfigSystem.lua"))()
 
 -- ==================================================
 -- LOAD TABS
