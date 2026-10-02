@@ -339,13 +339,6 @@ Loading.Update(95)
 Loading.Update(96)
 loadstring(GetScript("Features/BypassAntiCheat.lua"))()
 
--- ==================================================
--- APPLY CONFIG
--- ==================================================
-Loading.Update(98)
-if _G.YOKUDO_ConfigSystem then
-    _G.YOKUDO_ConfigSystem.Load()
-end
 
 Loading.Update(100)
 
