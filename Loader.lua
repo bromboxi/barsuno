@@ -1,17 +1,13 @@
 -- ==================================================
--- YOKUDO HUB | STEAL AN EGG | Loader (UPDATED v7)
--- ✅ TeleportSystem (Tab Auto Farming + Tab Farming)
--- ✅ SafeSpeedMode Feature
--- ✅ AutoEventNew + ManagerDrone
--- ✅ CollectEggNew + ESP Tabs
--- ✅ FarmingManager (TeleportSystem) + AFKSystem (Walk TP)
--- ✅ AntiGuard.lua (បន្ថែមវិញ)
--- ✅ DropEgg.lua (បន្ថែមវិញ)
--- ❌ គ្មាន VIPTP (ប្រើ TeleportSystem ជំនួស)
--- ❌ គ្មាន AntiRagdoll
+-- YOKUDO HUB | STEAL AN EGG | Loader (UPDATED v13)
+-- ✅ SpeedLock Check លូតមុនគេ
+-- ✅ MapSettings (Tab Only — All In One)
+-- ✅ Sound (Play Once at 50%)
+-- ✅ Load Features + Tabs
+-- ✅ Register + RunCheck
 -- ==================================================
 
-local BASE_URL = "https://raw.githubusercontent.com/bromboxi/barsun1/main/"
+local BASE_URL = "https://raw.githubusercontent.com/bromboxi/barsuno1/main/"
 
 _G.YOKUDO_EnablePrint = false
 
@@ -164,14 +160,32 @@ Loading.Update(5)
 -- ==================================================
 -- LOAD CORE FILES
 -- ==================================================
-Loading.Update(10)
+Loading.Update(8)
 loadstring(GetScript("Config.lua"))()
 
-Loading.Update(15)
+Loading.Update(10)
 loadstring(GetScript("UI.lua"))()
 
-Loading.Update(20)
+Loading.Update(12)
 loadstring(GetScript("Components.lua"))()
+
+-- ==================================================
+-- ✅ LOAD SPEED LOCK (លូតមុនគេ)
+-- ==================================================
+Loading.Update(15)
+loadstring(GetScript("Features/SpeedLock.lua"))()
+
+-- ==================================================
+-- ✅ RUN SPEED CHECK
+-- ==================================================
+Loading.Update(18)
+print("🔍 Running Speed Check...")
+task.wait(1.5)
+
+if _G.YOKUDO_SpeedLock then
+    _G.YOKUDO_SpeedLock.RunCheck()
+    _G.YOKUDO_IsSpeedUnlocked = _G.YOKUDO_SpeedLock.IsUnlocked()
+end
 
 -- ==================================================
 -- LOAD TABS MANAGER
@@ -185,16 +199,16 @@ loadstring(GetScript("Tabs/Init.lua"))()
 Loading.Update(28)
 loadstring(GetScript("Features/AntiAFK.lua"))()
 
+Loading.Update(30)
+loadstring(GetScript("Features/WalkSpeed.lua"))()
 
 Loading.Update(33)
 loadstring(GetScript("Features/AntiTrap.lua"))()
 
--- ❌ ដក AntiRagdoll
-
 Loading.Update(36)
 loadstring(GetScript("Features/GodMode.lua"))()
 
--- ✅ TeleportSystem (Lock Camera + Drop)
+-- ✅ TeleportSystem
 Loading.Update(39)
 loadstring(GetScript("Features/TeleportSystem.lua"))()
 
@@ -204,39 +218,42 @@ loadstring(GetScript("Features/AutoFarm.lua"))()
 Loading.Update(45)
 loadstring(GetScript("Features/AutoAttack.lua"))()
 
--- ✅ AFKSystem (Walk TP Only — No Fly/Shot)
 Loading.Update(48)
 loadstring(GetScript("Features/AFKSystem.lua"))()
 
--- ✅ SafeSpeedMode
+-- ==================================================
+-- ✅ LOAD SOUND (Loading 50% — Play Once)
+-- ==================================================
 Loading.Update(50)
-loadstring(GetScript("Features/SafeSpeedMode.lua"))()
+loadstring(GetScript("Features/Sound.lua"))()
 
--- ✅ FarmingManager (ប្រើ TeleportSystem)
+-- ✅ លេង Audio ភ្លាម (តែម្តង)
+if _G.YOKUDO_Sound then
+    _G.YOKUDO_Sound.Play()
+    print("🎵 Sound Played at Loading 50%")
+end
+
+-- ==================================================
+-- LOAD FEATURES (បន្ត)
+-- ==================================================
 Loading.Update(52)
 loadstring(GetScript("Features/FarmingManager.lua"))()
 
--- ❌ ដក VIPTP ចេញទាំងស្រុង
-
--- ✅ AutoEventNew
 Loading.Update(56)
---loadstring(GetScript("Features/AutoEventNew.lua"))()
+loadstring(GetScript("Features/AutoEventNew.lua"))()
 
 Loading.Update(58)
---loadstring(GetScript("Features/ManagerDrone.lua"))()
+loadstring(GetScript("Features/ManagerDrone.lua"))()
 
 Loading.Update(60)
 loadstring(GetScript("Features/ManualFastClick.lua"))()
 
--- ✅ DropEgg (បន្ថែមវិញ)
 Loading.Update(61)
 loadstring(GetScript("Features/DropEgg.lua"))()
 
--- ✅ AntiGuard (បន្ថែមវិញ)
 Loading.Update(62)
 loadstring(GetScript("Features/AntiGuard.lua"))()
 
--- ✅ ConfigSystem
 Loading.Update(63)
 loadstring(GetScript("Features/ConfigSystem.lua"))()
 
@@ -255,7 +272,6 @@ loadstring(GetScript("Tabs/Combat.lua"))()
 Loading.Update(73)
 loadstring(GetScript("Tabs/AutoFarming.lua"))()
 
--- ✅ Event Tab (AutoEventNew + Stop All)
 Loading.Update(76)
 loadstring(GetScript("Tabs/Event.lua"))()
 
@@ -265,18 +281,52 @@ loadstring(GetScript("Tabs/HopServer.lua"))()
 Loading.Update(85)
 loadstring(GetScript("Tabs/Setting.lua"))()
 
--- ✅ Collect Egg new Tab
 Loading.Update(88)
 loadstring(GetScript("Tabs/CollectEggNew.lua"))()
 
--- ✅ ESP Tab (Name + Distance + Box)
 Loading.Update(90)
 loadstring(GetScript("Tabs/ESP.lua"))()
 
 -- ==================================================
--- SELECT DEFAULT TAB
+-- ✅ LOAD MAP SETTINGS TAB
+-- ==================================================
+Loading.Update(91)
+loadstring(GetScript("Tabs/MapSettings.lua"))()
+
+-- ==================================================
+-- ✅ REGISTER LOCKABLE BUTTONS
 -- ==================================================
 Loading.Update(92)
+task.spawn(function()
+    task.wait(0.5)
+    
+    if _G.YOKUDO_SpeedLock then
+        if _G.YOKUDO_FarmButton then
+            _G.YOKUDO_SpeedLock.RegisterLockable(_G.YOKUDO_FarmButton, "Farm")
+            print("✅ Registered FarmButton")
+        else
+            warn("⚠️ _G.YOKUDO_FarmButton not found!")
+        end
+        
+        if _G.YOKUDO_GetEggCheckButton then
+            _G.YOKUDO_SpeedLock.RegisterLockable(_G.YOKUDO_GetEggCheckButton, "GetEgg")
+            print("✅ Registered GetEggCheckButton")
+        else
+            warn("⚠️ _G.YOKUDO_GetEggCheckButton not found!")
+        end
+        
+        task.wait(0.3)
+        if not _G.YOKUDO_SpeedLock.IsUnlocked() then
+            _G.YOKUDO_SpeedLock.ApplyLock()
+            print("🔒 Re-applied Lock")
+        end
+    end
+end)
+
+-- ==================================================
+-- SELECT DEFAULT TAB
+-- ==================================================
+Loading.Update(94)
 if _G.YOKUDO_TabsManager then
     _G.YOKUDO_TabsManager:SelectTabByName("Info")
 end
@@ -286,17 +336,14 @@ Loading.Update(95)
 -- ==================================================
 -- LOAD ANTI CHEAT
 -- ==================================================
-Loading.Update(98)
+Loading.Update(96)
 loadstring(GetScript("Features/BypassAntiCheat.lua"))()
 
 -- ==================================================
--- ✅ WAIT 2 SECONDS THEN APPLY CONFIG
+-- APPLY CONFIG
 -- ==================================================
-print("⏳ Waiting 2s before applying config...")
-task.wait(2)
-
+Loading.Update(98)
 if _G.YOKUDO_ConfigSystem then
-    print("🔧 Applying Config...")
     _G.YOKUDO_ConfigSystem.Load()
 end
 
@@ -306,3 +353,6 @@ task.wait(0.3)
 Loading.Destroy()
 print("✅ Loading Screen Closed!")
 print("🚀 YOKUDO HUB | Ready!")
+print("🎯 Speed:", _G.YOKUDO_IsSpeedUnlocked and "✅ UNLOCKED" or "🔒 LOCKED")
+print("🗺️ MapSettings:", _G.YOKUDO_MapSettings and "✅ LOADED" or "❌ NOT LOADED")
+print("🔊 Sound:", _G.YOKUDO_Sound and "✅ LOADED" or "❌ NOT LOADED")
