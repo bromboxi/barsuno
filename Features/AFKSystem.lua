@@ -1,14 +1,14 @@
 -- ==================================================
--- YOKUDO HUB | FEATURE | AFK System (v8 FINAL)
+-- YOKUDO HUB | FEATURE | AFK System (v9 FINAL)
 -- ✅ Walk TP: Humanoid:MoveTo() + Player Speed
 -- ✅ Save / Restore WalkSpeed
 -- ✅ Reset PlatformStand
 -- ✅ Check Grounded
 -- ✅ Character Respawn → Resume
 -- ✅ Fix: `continue` → `if ... then end`
--- ❌ ដក Dead Position
 -- ❌ ដក Y Check
--- ❌ ដក Auto Check
+-- ❌ ដក Dead Position
+-- ❌ ដក TeleportToDeadPosition
 -- ==================================================
 
 local Players = game:GetService("Players")
@@ -269,7 +269,7 @@ local function JumpOutTreadmill(TreadmillPos, Callback)
 end
 
 -- ==================================================
--- DISTANCE CHECK LOOP (ដក continue)
+-- DISTANCE CHECK LOOP
 -- ==================================================
 local function StartDistanceCheck()
     if DistCheckThread then
@@ -419,4 +419,4 @@ _G.YOKUDO_AFKSystem = {
     SAFE_ZONE = SAFE_ZONE,
 }
 
-print("✅ AFKSystem Loaded (v8 FINAL — No Dead Position)")
+print("✅ AFKSystem Loaded (v9 FINAL — No Y Check + No Dead Position)")
