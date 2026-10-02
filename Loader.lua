@@ -224,14 +224,6 @@ loadstring(GetScript("Features/AFKSystem.lua"))()
 -- ==================================================
 -- ✅ LOAD SOUND (Loading 50% — Play Once)
 -- ==================================================
-Loading.Update(50)
-loadstring(GetScript("Features/Sound.lua"))()
-
--- ✅ លេង Audio ភ្លាម (តែម្តង)
-if _G.YOKUDO_Sound then
-    _G.YOKUDO_Sound.Play()
-    print("🎵 Sound Played at Loading 50%")
-end
 
 -- ==================================================
 -- LOAD FEATURES (បន្ត)
