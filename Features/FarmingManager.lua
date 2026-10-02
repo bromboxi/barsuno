@@ -1,12 +1,13 @@
 -- ==================================================
--- YOKUDO HUB | FEATURE | Farming Manager (v4 FULL)
--- ✅ Divine Priority (Force Divine មុន)
+-- YOKUDO HUB | FEATURE | Farming Manager (v5 FULL)
+-- ✅ Divine Priority
 -- ✅ Filter Character + Player + First Egg
 -- ✅ Prevent Loop Reset (LastTargetUid)
--- ✅ Spawn Path First → Workspace Backup
--- ✅ Full Auto Loop
 -- ✅ Character Respawn → Restart
--- ✅ WalkSpeed ផ្ទាល់ពី Player
+-- ✅ WalkSpeed ផ្ទាល់
+-- ✅ Distance < 5 → Jump Out AFK
+-- ✅ Check Egg Alive
+-- ✅ Call UID ថ្មី ពេល Complete
 -- ==================================================
 
 local Players = game:GetService("Players")
@@ -34,6 +35,7 @@ local SAFE_ZONE_DIST = 5
 local SAFE_WAIT_AFTER_REACH = 1
 local WALK_TIMEOUT = 30
 local LOOP_WAIT_AFTER_AFK = 2
+local JUMP_OUT_DISTANCE = 5
 
 -- ==================================================
 -- CACHE SYSTEM
@@ -61,7 +63,7 @@ local RARITY_PRIORITY = {
 }
 
 -- ==================================================
--- SELECTED RARITIES (Default: Top1-Top5 Only)
+-- SELECTED RARITIES (Default: Top1-Top5)
 -- ==================================================
 local SelectedRarities = {
     Divine = true, Eternal = true, Secret = true,
@@ -70,7 +72,7 @@ local SelectedRarities = {
 }
 
 -- ==================================================
--- ✅ FILTER FUNCTIONS
+-- FILTER FUNCTIONS
 -- ==================================================
 local function IsPlayerCharacter(Obj)
     if not Obj then return false end
@@ -103,6 +105,20 @@ local function IsValidEgg(Obj)
             return false
         end
     end
+    
+    return true
+end
+
+local function CheckEggAlive(Uid)
+    if not Uid then return false end
+    
+    local Container = workspace:FindFirstChild("AreaEggSlotsClient")
+    local InContainer = Container and Container:FindFirstChild(Uid)
+    local InWorkspace = workspace:FindFirstChild(Uid)
+    
+    local Egg = InContainer or InWorkspace
+    if not Egg then return false end
+    if not Egg:FindFirstChildWhichIsA("BasePart") then return false end
     
     return true
 end
@@ -201,7 +217,7 @@ local function FindAssetCategory(EggModel)
 end
 
 -- ==================================================
--- SORT EGGS (Rarity Priority + EarningRate)
+-- SORT EGGS
 -- ==================================================
 local function SortEggs(EggList)
     table.sort(EggList, function(a, b)
@@ -213,12 +229,10 @@ local function SortEggs(EggList)
 end
 
 -- ==================================================
--- ✅ FIND BEST EGG (Divine Priority)
+-- FIND BEST EGG (Divine Priority)
 -- ==================================================
 local function FindBestEgg()
     local EggList = {}
-
-    -- ✅ Divine Priority
     local DivineEgg = nil
     local DivineEarningRate = 0
 
@@ -227,32 +241,27 @@ local function FindBestEgg()
         for _, Slot in ipairs(Container:GetChildren()) do
             if Slot:IsA("Model") then
                 if not IsValidEgg(Slot) then continue end
+                if not Slot.Parent then continue end
+                if not Slot:FindFirstChildWhichIsA("BasePart") then continue end
                 
                 local Category = FindAssetCategory(Slot)
                 if Category then
                     local Data = GetPetData(Category)
                     if Data and SelectedRarities[Data.Rarity] then
-                        -- ✅ Divine Priority
                         if Data.Rarity == "Divine" then
                             if Data.EarningRate > DivineEarningRate then
                                 DivineEarningRate = Data.EarningRate
                                 DivineEgg = {
-                                    Slot = Slot,
-                                    Uid = Slot.Name,
-                                    Rarity = "Divine",
-                                    EarningRate = Data.EarningRate,
-                                    DisplayName = Data.DisplayName,
+                                    Slot = Slot, Uid = Slot.Name, Rarity = "Divine",
+                                    EarningRate = Data.EarningRate, DisplayName = Data.DisplayName,
                                     Location = "spawn"
                                 }
                             end
                         end
                         
                         table.insert(EggList, {
-                            Slot = Slot,
-                            Uid = Slot.Name,
-                            Rarity = Data.Rarity,
-                            EarningRate = Data.EarningRate,
-                            DisplayName = Data.DisplayName,
+                            Slot = Slot, Uid = Slot.Name, Rarity = Data.Rarity,
+                            EarningRate = Data.EarningRate, DisplayName = Data.DisplayName,
                             Location = "spawn"
                         })
                     end
@@ -261,50 +270,41 @@ local function FindBestEgg()
         end
     end
 
-    -- ✅ Divine Found → Return ភ្លាម
     if DivineEgg then
         print("[FarmingManager] ✨ Divine Egg (Priority):", DivineEgg.DisplayName)
         return DivineEgg
     end
 
-    if #EggList > 0 then
-        SortEggs(EggList)
-        return EggList[1]
-    end
+    if #EggList > 0 then SortEggs(EggList) return EggList[1] end
 
-    -- ✅ Workspace Backup (Divine Priority)
+    -- Workspace Backup
     local WsDivineEgg = nil
     local WsDivineEarningRate = 0
 
     for _, Obj in ipairs(workspace:GetChildren()) do
         if Obj:IsA("Model") then
             if not IsValidEgg(Obj) then continue end
+            if not Obj.Parent then continue end
+            if not Obj:FindFirstChildWhichIsA("BasePart") then continue end
             
             local Category = FindAssetCategory(Obj)
             if Category then
                 local Data = GetPetData(Category)
                 if Data and SelectedRarities[Data.Rarity] then
-                    -- ✅ Divine Priority
                     if Data.Rarity == "Divine" then
                         if Data.EarningRate > WsDivineEarningRate then
                             WsDivineEarningRate = Data.EarningRate
                             WsDivineEgg = {
-                                Slot = Obj,
-                                Uid = Obj.Name,
-                                Rarity = "Divine",
-                                EarningRate = Data.EarningRate,
-                                DisplayName = Data.DisplayName,
+                                Slot = Obj, Uid = Obj.Name, Rarity = "Divine",
+                                EarningRate = Data.EarningRate, DisplayName = Data.DisplayName,
                                 Location = "workspace"
                             }
                         end
                     end
                     
                     table.insert(EggList, {
-                        Slot = Obj,
-                        Uid = Obj.Name,
-                        Rarity = Data.Rarity,
-                        EarningRate = Data.EarningRate,
-                        DisplayName = Data.DisplayName,
+                        Slot = Obj, Uid = Obj.Name, Rarity = Data.Rarity,
+                        EarningRate = Data.EarningRate, DisplayName = Data.DisplayName,
                         Location = "workspace"
                     })
                 end
@@ -312,7 +312,6 @@ local function FindBestEgg()
         end
     end
 
-    -- ✅ Divine Found → Return ភ្លាម
     if WsDivineEgg then
         print("[FarmingManager] ✨ Divine Egg (Workspace):", WsDivineEgg.DisplayName)
         return WsDivineEgg
@@ -366,17 +365,12 @@ end
 -- CLEANUP WALK
 -- ==================================================
 local function CleanupWalk()
-    if WalkConnection then
-        WalkConnection:Disconnect()
-        WalkConnection = nil
-    end
+    if WalkConnection then WalkConnection:Disconnect() WalkConnection = nil end
 
     local Hum = GetHum()
     local Root = GetRoot()
     if Hum then
-        pcall(function()
-            Hum:MoveTo(Root and Root.Position or Hum.Parent.HumanoidRootPart.Position)
-        end)
+        pcall(function() Hum:MoveTo(Root and Root.Position or Hum.Parent.HumanoidRootPart.Position) end)
     end
     if Root then
         pcall(function()
@@ -445,17 +439,11 @@ end
 -- ==================================================
 local function GetPhase()
     if AreaEggCycle then
-        local Success, IsNight = pcall(function()
-            return AreaEggCycle.IsNightPhase(Workspace:GetServerTimeNow())
-        end)
-        if Success then
-            return IsNight and "Night" or "Day"
-        end
+        local Success, IsNight = pcall(function() return AreaEggCycle.IsNightPhase(Workspace:GetServerTimeNow()) end)
+        if Success then return IsNight and "Night" or "Day" end
     end
 
-    local Success, Text = pcall(function()
-        return Player.PlayerGui.HUD.GameHUD.BottomRight.NightTimer.Value.Text
-    end)
+    local Success, Text = pcall(function() return Player.PlayerGui.HUD.GameHUD.BottomRight.NightTimer.Value.Text end)
     if Success and Text then
         local M = tonumber(string.match(Text, "(%d+)m")) or 0
         local S = tonumber(string.match(Text, "(%d+)s")) or 0
@@ -549,7 +537,7 @@ local function EnableAFK()
 end
 
 -- ==================================================
--- ON TELEPORT COMPLETE (Prevent Loop)
+-- ON TELEPORT COMPLETE
 -- ==================================================
 local function OnTeleportComplete()
     if not FarmingEnabled then return end
@@ -562,6 +550,13 @@ local function OnTeleportComplete()
     local BestEgg = FindBestEgg()
 
     if BestEgg then
+        if not CheckEggAlive(BestEgg.Uid) then
+            warn("[FarmingManager] ⚠️ Egg Target Gone → AFK")
+            task.wait(1)
+            EnableAFK()
+            return
+        end
+        
         if BestEgg.Uid == LastTargetUid then
             warn("[FarmingManager] ⚠️ Same Target → Skip Loop")
             task.wait(1)
@@ -570,7 +565,7 @@ local function OnTeleportComplete()
         end
         
         LastTargetUid = BestEgg.Uid
-        print("[FarmingManager] New Egg Found:", BestEgg.DisplayName, "| Rarity:", BestEgg.Rarity, "| Location:", BestEgg.Location)
+        print("[FarmingManager] New Egg Found:", BestEgg.DisplayName, "| Rarity:", BestEgg.Rarity)
         PendingEggUid = BestEgg.Uid
 
         task.spawn(function()
@@ -593,7 +588,7 @@ end
 -- MAIN LOOP
 -- ==================================================
 local function MainLoop()
-    print("[FarmingManager] MainLoop Started (Full Auto)")
+    print("[FarmingManager] MainLoop Started")
 
     while FarmingEnabled do
         local Phase = GetPhase()
@@ -602,24 +597,30 @@ local function MainLoop()
         local BestEgg = FindBestEgg()
 
         if BestEgg then
-            print("[FarmingManager] ✅ Egg Found:", BestEgg.DisplayName, "| Rarity:", BestEgg.Rarity, "| $/s:", BestEgg.EarningRate, "| Location:", BestEgg.Location)
-            PendingEggUid = BestEgg.Uid
-            LastTargetUid = BestEgg.Uid
+            if CheckEggAlive(BestEgg.Uid) then
+                print("[FarmingManager] ✅ Egg Found:", BestEgg.DisplayName, "| Rarity:", BestEgg.Rarity, "| $/s:", BestEgg.EarningRate)
+                PendingEggUid = BestEgg.Uid
+                LastTargetUid = BestEgg.Uid
 
-            StopAll()
-            task.wait(0.3)
+                StopAll()
+                task.wait(0.3)
 
-            local ReachedSafe = FlyToSafeZoneAndWait()
-            if ReachedSafe and PendingEggUid then
-                task.wait(SAFE_WAIT_AFTER_REACH)
-                StartTeleportSystem(PendingEggUid)
-                PendingEggUid = nil
+                local ReachedSafe = FlyToSafeZoneAndWait()
+                if ReachedSafe and PendingEggUid then
+                    task.wait(SAFE_WAIT_AFTER_REACH)
+                    StartTeleportSystem(PendingEggUid)
+                    PendingEggUid = nil
 
-                while WaitingForTeleport and FarmingEnabled do
-                    task.wait(0.2)
+                    while WaitingForTeleport and FarmingEnabled do
+                        task.wait(0.2)
+                    end
+                else
+                    print("[FarmingManager] ⚠️ Cannot reach Safe Zone → AFK")
+                    EnableAFK()
                 end
             else
-                print("[FarmingManager] ⚠️ Cannot reach Safe Zone → AFK")
+                warn("[FarmingManager] ⚠️ Egg Target Gone → AFK")
+                task.wait(1)
                 EnableAFK()
             end
         else
@@ -645,13 +646,42 @@ local function Enable()
     WaitingForTeleport = false
     LastTargetUid = nil
 
+    if _G.YOKUDO_AFKSystem and _G.YOKUDO_AFKSystem.IsEnabled() then
+        local MyTreadmillPos = _G.YOKUDO_AFKSystem.GetMyTreadmillPos()
+        local Root = GetRoot()
+        
+        if MyTreadmillPos and Root then
+            local Dist = (Root.Position - MyTreadmillPos).Magnitude
+            
+            if Dist < JUMP_OUT_DISTANCE then
+                print(string.format("[FarmingManager] 🦘 Distance: %.1f (< %d) → Jump Out", Dist, JUMP_OUT_DISTANCE))
+                
+                _G.YOKUDO_AFKSystem.JumpOutTreadmill(MyTreadmillPos, function()
+                    _G.YOKUDO_AFKSystem.Disable()
+                    AFKStarted = false
+                    print("[FarmingManager] ✅ Jumped Out")
+                end)
+                
+                task.wait(1.5)
+            else
+                _G.YOKUDO_AFKSystem.Disable()
+                task.wait(0.5)
+            end
+        else
+            _G.YOKUDO_AFKSystem.Disable()
+            task.wait(0.5)
+        end
+    end
+
     if FarmingThread then
         pcall(function() task.cancel(FarmingThread) end)
         FarmingThread = nil
     end
+    
+    task.wait(0.5)
     FarmingThread = task.spawn(function() MainLoop() end)
 
-    print("[YOKUDO] FarmingManager: ON (Full Auto Loop)")
+    print("[YOKUDO] FarmingManager: ON")
 end
 
 local function Disable()
@@ -679,41 +709,31 @@ local function Toggle()
 end
 
 -- ==================================================
--- ✅ CHARACTER RESPAWN RESTART
+-- CHARACTER RESPAWN
 -- ==================================================
 local function SetupDeathListener(Char)
     if not Char then return end
-    
     local Hum = Char:FindFirstChildOfClass("Humanoid")
     if not Hum then return end
     
     Hum.Died:Connect(function()
         print("[FarmingManager] ☠️ Player Died")
-        
         if FarmingEnabled then
-            print("[FarmingManager] ⏸️ Farming Paused (Dead)")
-            
             if _G.YOKUDO_TeleportSystem and _G.YOKUDO_TeleportSystem.IsEnabled() then
                 _G.YOKUDO_TeleportSystem.Disable()
             end
-            
             if _G.YOKUDO_AFKSystem and _G.YOKUDO_AFKSystem.IsEnabled() then
                 _G.YOKUDO_AFKSystem.Disable()
             end
-            
             CleanupWalk()
             WaitingForTeleport = false
         end
     end)
-    
-    print("[FarmingManager] ✅ Death Listener Setup")
 end
 
 Player.CharacterAdded:Connect(function(Char)
     if not FarmingEnabled then return end
-    
     print("[FarmingManager] 🔄 Character Respawned → Restart")
-    
     task.wait(3)
     
     if FarmingThread then
@@ -730,13 +750,10 @@ Player.CharacterAdded:Connect(function(Char)
     FarmingThread = task.spawn(function() MainLoop() end)
     
     print("[FarmingManager] ✅ Farming Restarted")
-    
     SetupDeathListener(Char)
 end)
 
-if Player.Character then
-    SetupDeathListener(Player.Character)
-end
+if Player.Character then SetupDeathListener(Player.Character) end
 
 -- ==================================================
 -- EXPORT
@@ -750,6 +767,7 @@ _G.YOKUDO_FarmingManager = {
     GetState = function() return CurrentState end,
     GetPhase = function() return CurrentPhase end,
     FindBestEgg = FindBestEgg,
+    CheckEggAlive = CheckEggAlive,
 
     GetEggData = function(Uid)
         if not Uid then return nil end
@@ -761,27 +779,11 @@ _G.YOKUDO_FarmingManager = {
         return GetPetData(Category)
     end,
 
-    GetUidLocation = function(Uid)
-        if not Uid then return "none" end
-        local Container = workspace:FindFirstChild("AreaEggSlotsClient")
-        local InContainer = Container and Container:FindFirstChild(Uid) ~= nil
-        if InContainer then return "spawn" end
-        local InWorkspace = workspace:FindFirstChild(Uid) ~= nil
-        if InWorkspace then return "workspace" end
-        return "none"
-    end,
-
-    NIGHT_CHECK_INTERVAL = NIGHT_CHECK_INTERVAL,
-    DAY_CHECK_INTERVAL = DAY_CHECK_INTERVAL,
-    WALK_TIMEOUT = WALK_TIMEOUT,
-    OnVIPTPComplete = OnTeleportComplete,
+    JUMP_OUT_DISTANCE = JUMP_OUT_DISTANCE,
     OnTeleportComplete = OnTeleportComplete,
     WalkTP = WalkTP,
 }
 
--- ==================================================
--- BUILD CACHE ON LOAD
--- ==================================================
 task.spawn(function()
     task.wait(1)
     BuildMeshIdMap()
@@ -795,4 +797,4 @@ task.spawn(function()
     end
 end)
 
-print("✅ FarmingManager Loaded (v4 — Divine Priority + Filter + Respawn)")
+print("✅ FarmingManager Loaded (v5 FINAL)")
