@@ -11,7 +11,7 @@
 -- ❌ គ្មាន AntiRagdoll
 -- ==================================================
 
-local BASE_URL = "https://raw.githubusercontent.com/bromboxi/barsuno/main/"
+local BASE_URL = "https://raw.githubusercontent.com/bromboxi/barsun1/main/"
 
 _G.YOKUDO_EnablePrint = false
 
