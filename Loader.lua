@@ -240,7 +240,7 @@ Loading.Update(52)
 loadstring(GetScript("Features/FarmingManager.lua"))()
 
 Loading.Update(56)
-loadstring(GetScript("Features/AutoEventNew.lua"))()
+--loadstring(GetScript("Features/AutoEventNew.lua"))()
 
 Loading.Update(58)
 --loadstring(GetScript("Features/ManagerDrone.lua"))()
