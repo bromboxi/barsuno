@@ -7,7 +7,7 @@
 -- ✅ Register + RunCheck
 -- ==================================================
 
-local BASE_URL = "https://raw.githubusercontent.com/bromboxi/barsuno1/main/"
+local BASE_URL = "https://raw.githubusercontent.com/bromboxi/barsuno/main/"
 
 _G.YOKUDO_EnablePrint = false
 
