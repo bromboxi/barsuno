@@ -1,11 +1,12 @@
 -- ==================================================
--- YOKUDO HUB | TAB | Map Settings (v4 FINAL)
+-- YOKUDO HUB | TAB | Map Settings (v5 FINAL)
 -- ✅ Data + UI + Functions (All In One)
 -- ✅ Map Name + TextBox
 -- ✅ User Input Value
 -- ✅ Reset Button
 -- ✅ Export _G.YOKUDO_MapSettings
--- ✅ គ្មាន Features/MapSettings.lua
+-- ✅ Map 11 (Enchanted Forest) បង្ហាញ
+-- ✅ Sort Map ID ត្រឹមត្រូវ
 -- ==================================================
 
 local TabsManager = _G.YOKUDO_TabsManager
@@ -17,8 +18,8 @@ local MapSettingsTab, MapSettingsPage = TabsManager:RegisterTab("Map Settings", 
 -- ✅ MAP DATA (All In One)
 -- ==================================================
 local MapData = {
-    [1] = {MapId = 1, Name = "Angels & Demons", DefaultWait = 8, Pos = Vector3.new(5666, 70, -329)},
-    [2] = {MapId = 2, Name = "Titan Temple", DefaultWait = 7, Pos = Vector3.new(4798, 70, -333)},
+    [1] = {MapId = 1, Name = "Angels & Demons", DefaultWait = 5, Pos = Vector3.new(5666, 70, -329)},
+    [2] = {MapId = 2, Name = "Titan Temple", DefaultWait = 6, Pos = Vector3.new(4798, 70, -333)},
     [3] = {MapId = 3, Name = "Cherry Blossom", DefaultWait = 6, Pos = Vector3.new(4031, 70, -396)},
     [4] = {MapId = 4, Name = "Cosmic", DefaultWait = 5, Pos = Vector3.new(3397, 70, -328)},
     [5] = {MapId = 5, Name = "Prehistoric", DefaultWait = 4, Pos = Vector3.new(2815, 70, -398)},
@@ -27,6 +28,7 @@ local MapData = {
     [8] = {MapId = 8, Name = "Snow", DefaultWait = 1, Pos = Vector3.new(1488, 70, -318)},
     [9] = {MapId = 9, Name = "Jungle", DefaultWait = 1, Pos = Vector3.new(1187, 70, -406)},
     [10] = {MapId = 10, Name = "Desert", DefaultWait = 1, Pos = Vector3.new(950, 70, -328)},
+    [11] = {MapId = 11, Name = "Enchanted Forest", DefaultWait = 5, Pos = Vector3.new(6703, 70, -349)},
 }
 
 -- ==================================================
@@ -237,9 +239,15 @@ local function CreateMapEntry(MapId, MapInfo)
 end
 
 -- ==================================================
--- CREATE ALL MAP ENTRIES
+-- ✅ CREATE ALL MAP ENTRIES (Sort Map ID)
 -- ==================================================
-for MapId = 1, 10 do
+local MapIds = {}
+for MapId, _ in pairs(MapData) do
+    table.insert(MapIds, MapId)
+end
+table.sort(MapIds, function(a, b) return a < b end)
+
+for _, MapId in ipairs(MapIds) do
     local MapInfo = MapData[MapId]
     if MapInfo then
         CreateMapEntry(MapId, MapInfo)
@@ -315,4 +323,4 @@ _G.YOKUDO_RefreshMapSettingsUI = function()
     print("[MapSettings] 🔄 UI Refreshed")
 end
 
-print("✅ Map Settings Tab Loaded (v4 FINAL — All In One)")
+print("✅ Map Settings Tab Loaded (v5 FINAL — Map 11 Enabled)")
