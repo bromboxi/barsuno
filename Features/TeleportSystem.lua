@@ -1,16 +1,3 @@
--- ==================================================
--- YOKUDO HUB | TELEPORT SYSTEM (v36 FINAL)
--- ✅ Player Speed (No 200)
--- ✅ No WalkTimeout
--- ✅ Short TP → 1200m → Drop → Walk TP
--- ✅ Collect Target Timeout 25s
--- ✅ Find Nearest First Egg
--- ✅ Reset First Egg ពេល Complete
--- ✅ Receive UID ពី Manager
--- ✅ Character Respawn Restart
--- ✅ Step 8b: Wait 1s → Short TP → Top2
--- ✅ Map 11 (Enchanted Forest)
--- ==================================================
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -28,7 +15,7 @@ local Config = {
     FlyTPDistance = 20,
     FlyOffset = 3,
     StopShotDistance = 1200,
-    ShotTPTime = 1.15,
+    ShotTPTime = 1.20,
     ShotTPTime2 = 1.10,
     PushUpOffset = 50,
     PlayerCheckDistance = 30,
