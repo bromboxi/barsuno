@@ -7,7 +7,7 @@ local Player = Players.LocalPlayer
 local Container = workspace:WaitForChild("AreaEggSlotsClient")
 
 -- ==================================================
--- CONFIG (ដក RecoverWaitTime)
+-- CONFIG
 -- ==================================================
 local Config = {
     ArriveDistance = 2,
@@ -24,7 +24,10 @@ local Config = {
     MaxRepeatCount = 10,
     CollectTargetTimeout = 25,
 
-    -- ❌ ដក RecoverWaitTime ចេញ
+    -- ✅ Step 8b: Wait + Top2
+    Top2ShortTPWait = 0.10,     -- ✅ Wait 1s មុន Short TP
+    Top2ShotTPTime = 0.10,      -- ✅ Short TP Time (1s)
+    Top2StopDistance = 4,    -- ✅ Stop Distance
 
     Position1_Top1 = Vector3.new(612, 70, -333),
     Position1_Top2 = Vector3.new(546, 70, -309),
@@ -770,9 +773,6 @@ Step4_WalkToTargetAndFlyLock = function()
     end)
 end
 
--- ==================================================
--- ✅ STEP 7 (ដក Wait Recover ចេញ)
--- ==================================================
 Step7_ShotToSafePosition = function()
     if not State.Running then return end
     State.Step = "7_push_up"
@@ -797,8 +797,6 @@ Step7_ShotToSafePosition = function()
                     State.CurrentEggUid = nil
                     task.wait(0.2)
                     StopLock()
-                    
-                    -- ✅ គ្មាន Wait — ទៅ Recover ភ្លាម
                     
                     Step8c_CheckDistanceAndRecover()
                 end)
@@ -875,6 +873,9 @@ Step8b_WalkToCollectAgain = function()
     end)
 end
 
+-- ==================================================
+-- ✅ STEP 9 (រក្សាទុកសម្រាប់ Timeout Only)
+-- ==================================================
 Step9_WalkToSwapPosition = function()
     if not State.Running then return end
     State.Step = "9_to_swap"
@@ -929,6 +930,9 @@ StartEggGoneCheck = function()
     end)
 end
 
+-- ==================================================
+-- ✅ SETUP DROP HELD EGG (Step 8b → Wait 1s → Short TP → Top2)
+-- ==================================================
 SetupDropHeldEgg = function()
     local PG = Player:FindFirstChild("PlayerGui") or Player:WaitForChild("PlayerGui", 5)
     if not PG then return end
@@ -939,6 +943,7 @@ SetupDropHeldEgg = function()
     State.DropHeldEggConnection = State.DropHeldEgg:GetPropertyChangedSignal("Enabled"):Connect(function()
         local IsEnabled = State.DropHeldEgg.Enabled == true
 
+        -- ✅ Step 2: First Egg Collect
         if IsEnabled and State.Running and State.Step == "2_collect_first" then
             State.FirstCollected = true
             State.CurrentEggUid = State.FirstEggUid
@@ -953,6 +958,7 @@ SetupDropHeldEgg = function()
             end)
         end
 
+        -- ✅ Step 6: Target Collect
         if IsEnabled and State.Running and State.Step == "6_collect_target" then
             State.TargetCollected = true
             State.CurrentEggUid = State.TargetUid
@@ -963,13 +969,38 @@ SetupDropHeldEgg = function()
             end)
         end
 
+        -- ✅ Step 8b: Collect Again → Wait 1s → Short TP → Top2
         if IsEnabled and State.Running and State.Step == "8b_collect_again" then
             State.CollectedAgain = true
             State.CurrentEggUid = State.TargetUid
             StopLock()
             task.spawn(function()
                 task.wait(0.2)
-                Step9_WalkToSwapPosition()
+                
+                -- ✅ Wait 1s
+                print(string.format("[TeleportSystem] ⏱️ Wait %ds → Short TP Top2", Config.Top2ShortTPWait))
+                task.wait(Config.Top2ShortTPWait)
+                
+                if not State.Running then return end
+                
+                -- ✅ Get Top2 Position
+                local SafeName = State.SafeName or "P1_Top1"
+                local Top2Pos = Config.Position1_Top2
+                
+                if SafeName == "P1_Top1" then
+                    Top2Pos = Config.Position1_Top2
+                elseif SafeName == "P2_Top1" then
+                    Top2Pos = Config.Position2_Top2
+                end
+                
+                print(string.format("[TeleportSystem] ⚡ Short TP → Top2 | %s", SafeName))
+                
+                -- ✅ Short TP → Top2
+                ShotTPWithStop(Top2Pos, Config.Top2ShotTPTime, Config.Top2StopDistance, function()
+                    print("[TeleportSystem] ✅ At Top2")
+                    task.wait(0.3)
+                    AutoStop()
+                end)
             end)
         end
     end)
@@ -1136,4 +1167,4 @@ function TeleportSystem.GetTargetId() return State.TargetUid end
 
 _G.YOKUDO_TeleportSystem = TeleportSystem
 
-print("✅ TeleportSystem Loaded (v35 FINAL — No RecoverWaitTime)")
+print("✅ TeleportSystem Loaded (v36 FINAL — Step 8b: Wait 1s → Short TP Top2)")
