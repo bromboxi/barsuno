@@ -1,14 +1,3 @@
--- ==================================================
--- YOKUDO HUB | TAB | Map Settings (v5 FINAL)
--- ✅ Data + UI + Functions (All In One)
--- ✅ Map Name + TextBox
--- ✅ User Input Value
--- ✅ Reset Button
--- ✅ Export _G.YOKUDO_MapSettings
--- ✅ Map 11 (Enchanted Forest) បង្ហាញ
--- ✅ Sort Map ID ត្រឹមត្រូវ
--- ==================================================
-
 local TabsManager = _G.YOKUDO_TabsManager
 local TweenService = game:GetService("TweenService")
 
