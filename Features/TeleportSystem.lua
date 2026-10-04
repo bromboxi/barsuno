@@ -1,3 +1,4 @@
+
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -14,15 +15,15 @@ local Config = {
     FlyTPDistance = 20,
     FlyOffset = 3,
     StopShotDistance = 1200,
-    ShotTPTime = 1.20,
-    ShotTPTime2 = 1.20,
+    ShotTPTime = 1.40,
+    ShotTPTime2 = 1.10,
     PushUpOffset = 50,
     PlayerCheckDistance = 30,
     LockWait = 0.1,
     RecoverDistanceThreshold = 500,
     MaxRepeatCount = 10,
     CollectTargetTimeout = 25,
-    RecoverWaitTime = 3,  -- ✅ Wait 1.5s មុន Recover
+    RecoverWaitTime = 1.5,  -- ✅ Wait 1.5s មុន Recover
 
     Position1_Top1 = Vector3.new(612, 70, -333),
     Position1_Top2 = Vector3.new(546, 70, -309),
