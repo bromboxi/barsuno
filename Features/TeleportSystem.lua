@@ -35,7 +35,7 @@ local Config = {
     LockWait = 0.1,
     RecoverDistanceThreshold = 500,
     MaxRepeatCount = 10,
-    CollectTargetTimeout = 25,
+    CollectTargetTimeout = 20,
 
     -- ✅ Step 8b: Wait + Top2
     Top2ShortTPWait = 0.01,     -- ✅ Wait 1s មុន Short TP
