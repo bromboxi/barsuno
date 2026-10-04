@@ -7,7 +7,7 @@ local Player = Players.LocalPlayer
 local Container = workspace:WaitForChild("AreaEggSlotsClient")
 
 -- ==================================================
--- CONFIG
+-- CONFIG (ដក RecoverWaitTime)
 -- ==================================================
 local Config = {
     ArriveDistance = 2,
@@ -23,7 +23,8 @@ local Config = {
     RecoverDistanceThreshold = 500,
     MaxRepeatCount = 10,
     CollectTargetTimeout = 25,
-    RecoverWaitTime = 0,  -- ✅ Wait 1.5s មុន Recover
+
+    -- ❌ ដក RecoverWaitTime ចេញ
 
     Position1_Top1 = Vector3.new(612, 70, -333),
     Position1_Top2 = Vector3.new(546, 70, -309),
@@ -770,7 +771,7 @@ Step4_WalkToTargetAndFlyLock = function()
 end
 
 -- ==================================================
--- ✅ STEP 7 (Wait 1.5s មុន Recover)
+-- ✅ STEP 7 (ដក Wait Recover ចេញ)
 -- ==================================================
 Step7_ShotToSafePosition = function()
     if not State.Running then return end
@@ -797,8 +798,7 @@ Step7_ShotToSafePosition = function()
                     task.wait(0.2)
                     StopLock()
                     
-                    -- ✅ Wait 1.5s មុន Recover
-                    task.wait(Config.RecoverWaitTime)
+                    -- ✅ គ្មាន Wait — ទៅ Recover ភ្លាម
                     
                     Step8c_CheckDistanceAndRecover()
                 end)
@@ -1136,4 +1136,4 @@ function TeleportSystem.GetTargetId() return State.TargetUid end
 
 _G.YOKUDO_TeleportSystem = TeleportSystem
 
-print("✅ TeleportSystem Loaded (v34 FINAL — Wait 1.5s Recover + Map 11)")
+print("✅ TeleportSystem Loaded (v35 FINAL — No RecoverWaitTime)")
